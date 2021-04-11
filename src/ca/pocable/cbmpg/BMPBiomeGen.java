@@ -10,37 +10,36 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
+/**
+ * Biome generator given an image file.
+ * @see BiomeColorizer
+ */
 public class BMPBiomeGen implements BiomeGenerator {
 	
 	Biome[][] data;
-	HashMap<Color, Biome> colorToBiome;
 	Biome defaultBiome;
 	boolean isTiled;
+	BiomeColorizer colorizer;
 
-	public BMPBiomeGen(String file, Biome defaultBiome){
-		this(file, defaultBiome, false);
+	public BMPBiomeGen(String file, Biome defaultBiome, BiomeColorizer colorizer){
+		this(file, defaultBiome, colorizer,false);
 	}
 
-	public BMPBiomeGen(String bmpFilePath, Biome defaultBiome, boolean isTiled) {
+	public BMPBiomeGen(String bmpFilePath, Biome defaultBiome, BiomeColorizer colorizer, boolean isTiled) {
 		super();
 
 		this.defaultBiome = defaultBiome;
 		this.isTiled = isTiled;
-		colorToBiome = new HashMap<>();
-
-		// Given each existing Biome, generate a unique grey color for it.
-		int maxLength = Biome.values().length;
-		for(Biome bio : Biome.values()) {
-			int val = bio.ordinal();
-			Color newC = new Color(val * (255 / maxLength), val * (255 / maxLength), val * (255 / maxLength));
-			colorToBiome.put(newC, bio);
-		}
+		this.colorizer = colorizer;
 
 		// Read the file and try to get the Biome index number from it.
 		File f = new File(bmpFilePath);
 		if(!f.exists()){
 			Bukkit.getLogger().severe(String.format("BMP file %s is not found, the generator will not work.",
 					bmpFilePath));
+			Bukkit.getLogger().severe("Please re-verify the file is in the right spot." +
+					" The server is going to crash.");
+			Bukkit.getServer().shutdown();
 		}else {
 			try {
 				BufferedImage image = ImageIO.read(f);
@@ -49,46 +48,22 @@ public class BMPBiomeGen implements BiomeGenerator {
 					for (int y = 0; y < image.getHeight(); y++) {
 						int color = image.getRGB(x, y);
 						Color toRound = new Color(color);
-						data[x][y] = rgbToBiome(new Color(closestInteger(toRound.getRed(), 3),
-								closestInteger(toRound.getGreen(), 3), closestInteger(toRound.getBlue(), 3)));
+						data[x][y] = colorizer.getNearestBiome(new Color(toRound.getRed(),
+								toRound.getGreen(), toRound.getBlue()));
 					}
 				}
 			} catch (IOException e) {
 				Bukkit.getLogger().severe("Error reading the BMP file to convert to Biomes.\n" +
-						e.getMessage() + "\n");
+						e.getMessage());
+				Bukkit.getLogger().severe("To prevent a crash, the server will shutdown.");
+				Bukkit.getServer().shutdown();
 			}
 		}
 		
 	}
 
-	/**
-	 * Given a, calculates the closest b value.
-	 * @param a The initial value.
-	 * @param b The value we want to be a multiple of.
-	 * @return An int that is a multiple of b closest to a.
-	 */
-	private static int closestInteger(int a, int b) {
-		return ((a / b)) * b;
-	}
-	
-	/**
-	 * Convert color to Biome.
-	 * @param c The color.
-	 * @return The biome
-	 */
-	public Biome rgbToBiome(Color c) {
-		Biome b = colorToBiome.get(c);
-		if(b == null) {
-			return Biome.THE_VOID;
-		}
-		return b;
-	}
-
 	@Override
 	public Biome getZoomedOutBiome(int x, int y, int z) {
-		//x /= 4;
-		//z /= 4; # Its by a factor of 4 as required by minecraft.
-
 		// If its tiled, just mod to fit in our image.
 		if(isTiled) {
 			x = x % (data.length / 2);

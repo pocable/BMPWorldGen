@@ -12,11 +12,15 @@ public class BMPWorldGen extends JavaPlugin implements Listener{
 
 	ConfigurationSection BIOME_CONFIG;
 	Set<String> CONTROLLED_WORLDS;
+	BiomeColorizer colorizer;
 	
 	@Override
 	public void onEnable() {
 		saveDefaultConfig();
 		BIOME_CONFIG = getConfig().getConfigurationSection("generator_worlds");
+		colorizer = new BiomeColorizer();
+		colorizer.generateGreyscaleDefaultBiomes();
+
 		if (BIOME_CONFIG != null) {
 			CONTROLLED_WORLDS = BIOME_CONFIG.getKeys(false);
 		}else{
@@ -45,7 +49,7 @@ public class BMPWorldGen extends JavaPlugin implements Listener{
 
 			Biome defaultBiome = Biome.valueOf(defaultBiomePath);
 
-			e.getWorldGenerator().setBiomeGenerator(new BMPBiomeGen(bmpPath, defaultBiome, isTiled));
+			e.getWorldGenerator().setBiomeGenerator(new BMPBiomeGen(bmpPath, defaultBiome, colorizer, isTiled));
 		}
 	}
 }

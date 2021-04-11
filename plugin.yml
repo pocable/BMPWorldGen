@@ -1,6 +1,6 @@
 name: BMPWorldGen
 main: ca.pocable.cbmpg.BMPWorldGen
-version: 1.0.0
+version: 1.0.1
 depend: [WorldGeneratorApi]
 load: STARTUP
 api-version: 1.16

@@ -6,7 +6,7 @@
 
     <groupId>ca.pocable</groupId>
     <artifactId>BMPWorldGen</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 
     <build>
         <resources>
@@ -35,6 +35,8 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
 
