@@ -11,6 +11,15 @@ the world generation will return to normal, but
 there will be obvious chunk walls. To get around this
 you could try putting a MOUNTAIN biome there.
 
+## Installation
+Unzip the release file and place the folder and jar in your plugin
+directory. Add the [WorldGeneratorAPI](https://www.spigotmc.org/resources/worldgeneratorapi.77976/)
+jar into your plugins folder. Modify the config file and place your 
+BMP file near the server jar. Make sure it's named what you put for the image_file_name.
+
+To use the new generation, delete the world folders for worlds you chose. 
+This plugin only works with a fresh world.
+
 ## Configuration
 The config.yml should be setup like below:
 ```
