@@ -1,4 +1,6 @@
 # BMP World Gen
+***This plugin requires [WorldGeneratorAPI](https://www.spigotmc.org/resources/worldgeneratorapi.77976/)***
+
 Bukkit plugin to set biomes in your world 
 while maintaining the natural generation! When
 freshly generating a new world this plugin will
