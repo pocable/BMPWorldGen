@@ -40,10 +40,16 @@ check there first.
 Make sure the default biome is all caps. For exact
 names, [check the color code page](COLORCODES.md).
 
-## BMP Image Color Coding
+## BMP Image Information and Color Coding
 [Check out this page for the color coding.](COLORCODES.md)
 Try to make it exact as possible, or it will
 round and may not be what you expected.
+
+The image size determines how much of the map will have controlled generation.
+Since each pixel represents a 4x4 area, if you wanted to control generation
+for a 1000x1000 block area you would want an image sized 250x250. Remember
+that if you have tiling turned off it will fill everything
+outside this 1000x1000 block area with the default biome.
 
 ## Examples
 ![First BMP Image](BMPOne.bmp?raw=true)
