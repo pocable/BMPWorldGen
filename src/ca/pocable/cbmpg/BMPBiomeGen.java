@@ -3,7 +3,6 @@ package ca.pocable.cbmpg;
 import nl.rutgerkok.worldgeneratorapi.BiomeGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Biome;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -22,7 +21,7 @@ public class BMPBiomeGen implements BiomeGenerator {
 		this(file, defaultBiome, false);
 	}
 
-	public BMPBiomeGen(String file, Biome defaultBiome, boolean isTiled) {
+	public BMPBiomeGen(String bmpFilePath, Biome defaultBiome, boolean isTiled) {
 		super();
 
 		this.defaultBiome = defaultBiome;
@@ -38,21 +37,26 @@ public class BMPBiomeGen implements BiomeGenerator {
 		}
 
 		// Read the file and try to get the Biome index number from it.
-		File f = new File(file);
-		try {
-			BufferedImage image = ImageIO.read(f);
-			data = new Biome[image.getWidth()][image.getHeight()];
-			for(int x = 0; x < image.getWidth(); x++) {
-				for(int y = 0; y < image.getHeight(); y++) {
-					int color = image.getRGB(x, y);
-					Color toRound = new Color(color);
-					data[x][y] = rgbToBiome(new Color(closestInteger(toRound.getRed(), 3),
-							closestInteger(toRound.getGreen(), 3), closestInteger(toRound.getBlue(), 3)));
+		File f = new File(bmpFilePath);
+		if(!f.exists()){
+			Bukkit.getLogger().severe(String.format("BMP file %s is not found, the generator will not work.",
+					bmpFilePath));
+		}else {
+			try {
+				BufferedImage image = ImageIO.read(f);
+				data = new Biome[image.getWidth()][image.getHeight()];
+				for (int x = 0; x < image.getWidth(); x++) {
+					for (int y = 0; y < image.getHeight(); y++) {
+						int color = image.getRGB(x, y);
+						Color toRound = new Color(color);
+						data[x][y] = rgbToBiome(new Color(closestInteger(toRound.getRed(), 3),
+								closestInteger(toRound.getGreen(), 3), closestInteger(toRound.getBlue(), 3)));
+					}
 				}
+			} catch (IOException e) {
+				Bukkit.getLogger().severe("Error reading the BMP file to convert to Biomes.\n" +
+						e.getMessage() + "\n");
 			}
-		}catch(IOException e) {
-			Bukkit.getLogger().severe("Error reading the BMP file to convert to Biomes.\n" +
-					e.getMessage() + "\n");
 		}
 		
 	}
@@ -64,7 +68,7 @@ public class BMPBiomeGen implements BiomeGenerator {
 	 * @return An int that is a multiple of b closest to a.
 	 */
 	private static int closestInteger(int a, int b) {
-		return (int) ((a / b)) * b;
+		return ((a / b)) * b;
 	}
 	
 	/**
