@@ -1,0 +1,17 @@
+# Default Config for BMP
+# -----------------------
+# Everything for this plugin is under the generator_worlds
+# To set a world to follow a BMP file for generation, add it in this format:
+#
+# world name:
+#   default_biome: The filler biome for every other section
+#   image_file_name: The BMP image file next to your server jar file. This can be a path as well.
+#   tiled_world: (true/false), if you want this image to be tiled across the world set it to true
+
+
+
+generator_worlds:
+  world:
+    default_biome: OCEAN
+    image_file_name: WorldGen.bmp
+    tiled_world: true
